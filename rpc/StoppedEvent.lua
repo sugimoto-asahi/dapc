@@ -1,7 +1,7 @@
 --- @class StoppedEventBody
 --- @field reason StoppedEventReason
 --- @field description? string
---- @field threadId? string
+--- @field threadId? number
 --- @field preserveFocusHint? boolean
 --- @field text? string
 --- @field allThreadsStopped? boolean

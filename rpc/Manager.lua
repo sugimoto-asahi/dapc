@@ -11,6 +11,7 @@ local Request = require("dapc.rpc.Request")
 local Event = require("dapc.rpc.Event")
 local Message = require("dapc.rpc.Message")
 local StoppedEvent = require("dapc.rpc.StoppedEvent")
+local Logger = require("logger")
 
 --- @class DAP Manager
 --- @field current_seq number Current JSON-RPC sequence number
@@ -67,6 +68,7 @@ end
 --- @param response Response
 function Manager.process_response(response)
 	if response.command == Request.RequestCommand.INITIALIZE then
+		Logger.log(response)
 		local launch_request = LaunchRequest:new(Manager.get_next_seq(), {
 			name = "lldb-dap",
 			type = "lldb-dap",
@@ -76,28 +78,28 @@ function Manager.process_response(response)
 		})
 		Manager.send_request(launch_request)
 	elseif response.command == Request.RequestCommand.SET_BREAKPOINTS then
+		Logger.log(response)
 		local set_function_breakpoints_req = SetFunctionBreakpointsRequest:new(Manager.get_next_seq(), {
-			breakpoints = { { name = "add" } },
+			breakpoints = {},
 		})
 		Manager.send_request(set_function_breakpoints_req)
 	elseif response.command == Request.RequestCommand.SET_FUNCTION_BREAKPOINTS then
+		Logger.log(response)
 		local set_exception_breakpoints_req = SetExceptionBreakpointsRequest:new(Manager.get_next_seq(), {
-			filters = { "cpp_throw", "cpp_catch" },
+			filters = { "cpp_catch", "cpp_throw" },
 		})
 		Manager.send_request(set_exception_breakpoints_req)
 	elseif response.command == Request.RequestCommand.SET_EXCEPTION_BREAKPOINTS then
+		Logger.log(response)
 		local config_done_request = ConfigurationDoneRequest:new(Manager.get_next_seq())
 		Manager.send_request(config_done_request)
 	elseif response.command == Request.RequestCommand.CONFIGURATION_DONE then
-		vim.print("Configuration done")
+		Logger.log("Configuration done")
 	elseif response.command == Request.RequestCommand.THREADS then
-		-- local id = response.body.threads[4].id
-		-- local stack_trace_request = StackTraceRequest:new(Manager.get_next_seq(), {
-		-- 	threadId = id,
-		-- })
-		-- Manager.send_request(stack_trace_request)
+		-- TODO
 	elseif response.command == Request.RequestCommand.STACK_TRACE then
-		vim.print(response)
+		vim.print("here")
+		Logger.log(response)
 	end
 end
 
@@ -118,11 +120,18 @@ function Manager.process_event(event)
 		})
 		Manager.send_request(set_breakpoints_request)
 	elseif event.event == Event.EventType.STOPPED then
+		Logger.log("Event: Stopped, Reason: " .. event.body.reason)
+		vim.print("here")
 		if event.body.reason == StoppedEvent.Reason.ENTRY then
-			vim.print("stopped event: entry")
+		elseif event.body.reason == StoppedEvent.Reason.BREAKPOINT then
+			--- @cast event StoppedEvent
+			-- We are stopped at one of our breakpoints, so
+			-- we start collecting all the stack data for the stopped thread
+			local stack_trace_request = StackTraceRequest:new(Manager.get_next_seq(), {
+				threadId = event.body.threadId,
+			})
+			Manager.send_request(stack_trace_request)
 		end
-		-- local threads_request = ThreadsRequest:new(Manager.get_next_seq())
-		-- Manager.send_request(threads_request)
 	end
 end
 
