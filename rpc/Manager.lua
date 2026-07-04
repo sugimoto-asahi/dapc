@@ -39,6 +39,7 @@ end
 --- Send a request to stdout
 --- @param req Request Request to send
 function Manager.send_request(req)
+	Logger.log("Request: " .. req.command)
 	Manager.writer(to_message(req:get_partial()))
 end
 
@@ -136,14 +137,12 @@ function Manager.process_response(response)
 		--- @cast response SetDataBreakpointsResponse
 	elseif response.command == Request.COMMAND.SET_EXCEPTION_BREAKPOINTS then
 		--- @cast response SetExceptionBreakpointsResponse
-		Logger.log(response)
 		local config_done_request = Request.ConfigurationDone:new(Manager.get_next_seq(), {})
 		Manager.send_request(config_done_request)
 	elseif response.command == Request.COMMAND.SET_EXPRESSION then
 		--- @cast response SetExpressionResponse
 	elseif response.command == Request.COMMAND.SET_FUNCTION_BREAKPOINTS then
 		--- @cast response SetFunctionBreakpointsResponse
-		Logger.log(response)
 		local set_exception_breakpoints_req = Request.SetExceptionBreakpoints:new(Manager.get_next_seq(), {
 			filters = { "cpp_catch", "cpp_throw" },
 		})
@@ -189,6 +188,14 @@ function Manager.process_event(event)
 	Logger.log("Event: " .. event.event)
 	if event.event == Event.EVENT_TYPE.BREAKPOINT then
 		--- @cast event BreakpointEvent
+	elseif event.event == Event.EVENT_TYPE.CAPABILILTIES then
+		--- @cast event CapabilitiesEvent
+	elseif event.event == Event.EVENT_TYPE.CONTINUED then
+		--- @cast event ContinuedEvent
+	elseif event.event == Event.EVENT_TYPE.EXITED then
+		--- @cast event ExitedEvent
+	elseif event.event == Event.EVENT_TYPE.INITIALIZED then
+		--- @cast event InitializedEvent
 		local set_breakpoints_request = Request.SetBreakpoints:new(Manager.get_next_seq(), {
 			source = {
 				path = "C:\\Users\\juayh\\Dev\\test\\src\\main.cpp",
@@ -200,14 +207,6 @@ function Manager.process_event(event)
 			},
 		})
 		Manager.send_request(set_breakpoints_request)
-	elseif event.event == Event.EVENT_TYPE.CAPABILILTIES then
-		--- @cast event CapabilitiesEvent
-	elseif event.event == Event.EVENT_TYPE.CONTINUED then
-		--- @cast event ContinuedEvent
-	elseif event.event == Event.EVENT_TYPE.EXITED then
-		--- @cast event ExitedEvent
-	elseif event.event == Event.EVENT_TYPE.INITIALIZED then
-		--- @cast event InitializedEvent
 	elseif event.event == Event.EVENT_TYPE.INVALIDATED then
 		--- @cast event InvalidatedEvent
 	elseif event.event == Event.EVENT_TYPE.LOADED_SOURCE then
