@@ -1,0 +1,12 @@
+--- @class SetExpressionResponseBody
+--- @field value string
+--- @field type? string
+--- @field presentationHint? VariablePresentationHint
+--- @field variablesReference? number
+--- @field namedVariables? number
+--- @field indexedVariables? number
+--- @field memoryReference? string
+--- @field valueLocationReference? number
+
+--- @class SetExpressionResponse : Response
+--- @field body SetExpressionResponseBody

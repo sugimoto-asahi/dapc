@@ -1,5 +1,7 @@
 local Request = require("dapc.rpc.request.Request")
 
+local SetExceptionBreakpointsRequest = Request:new(Request.COMMAND.SET_EXCEPTION_BREAKPOINTS)
+
 --- @class SetExceptionBreakpointsArguments
 --- @field filters string[]
 --- @field filterOptions? ExceptionFilterOptions[]
@@ -7,18 +9,6 @@ local Request = require("dapc.rpc.request.Request")
 
 --- @class SetExceptionBreakpointsRequest : Request
 --- @field arguments SetExceptionBreakpointsArguments
-local SetExceptionBreakpointsRequest = Request:new(Request.COMMAND.SET_EXCEPTION_BREAKPOINTS)
-SetExceptionBreakpointsRequest.__index = SetExceptionBreakpointsRequest
-
---- Constructor
---- @param seq number Sequence number to assign to this request
---- @param arguments SetExceptionBreakpointsArguments
-function SetExceptionBreakpointsRequest:new(seq, arguments)
-	local o = {}
-	setmetatable(o, self)
-	o.seq = seq
-	o.arguments = arguments
-	return o
-end
+--- @field new fun(self, seq: number, arguments: SetExceptionBreakpointsArguments)
 
 return SetExceptionBreakpointsRequest

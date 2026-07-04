@@ -1,21 +1,12 @@
 local Request = require("dapc.rpc.request.Request")
 
 --- @class ContinueArguments
---- @field threadId number Thread to continue
+--- @field threadId number
+--- @field singleThread? boolean
 
 --- @class ContinueRequest : Request
 --- @field arguments ContinueArguments
+--- @field new fun(self, seq: number, arguments : ContinueArguments)
 local ContinueRequest = Request:new(Request.COMMAND.CONTINUE)
-ContinueRequest.__index = ContinueRequest
-
---- Constructor
---- @param seq number Sequence number to assign to this request
-function ContinueRequest:new(seq, arguments)
-	local o = {}
-	setmetatable(o, self)
-	o.seq = seq
-	o.arguments = arguments
-	return o
-end
 
 return ContinueRequest

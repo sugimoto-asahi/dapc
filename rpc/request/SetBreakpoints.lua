@@ -1,27 +1,15 @@
 local Request = require("dapc.rpc.request.Request")
 
---- @alias SetBreakpointsArgumentsPresentationHint "normal" | "emphasize" | "deemphasize"
+local SetBreakpointsRequest = Request:new(Request.COMMAND.SET_BREAKPOINTS)
 
 --- @class SetBreakpointsArguments
 --- @field source Source
 --- @field breakpoints? SourceBreakpoint[]
---- @field lines? number[] DEPRECATED
+--- @field lines? number[]
 --- @field sourceModified? boolean
 
 --- @class SetBreakpointsRequest : Request
 --- @field arguments SetBreakpointsArguments
-local SetBreakpointsRequest = Request:new(Request.COMMAND.SET_BREAKPOINTS)
-SetBreakpointsRequest.__index = SetBreakpointsRequest
-
---- Constructor
---- @param seq number Sequence number to assign to this request
---- @param arguments SetBreakpointsArguments
-function SetBreakpointsRequest:new(seq, arguments)
-	local o = {}
-	setmetatable(o, self)
-	o.seq = seq
-	o.arguments = arguments
-	return o
-end
+--- @field new fun(self, seq: number, arguments: SetBreakpointsArguments)
 
 return SetBreakpointsRequest

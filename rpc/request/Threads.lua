@@ -1,16 +1,11 @@
 local Request = require("dapc.rpc.request.Request")
 
---- @class ThreadsRequest : Request
 local ThreadsRequest = Request:new(Request.COMMAND.THREADS)
-ThreadsRequest.__index = ThreadsRequest
 
---- Constructor
---- @param seq number Sequence number to assign to this request
-function ThreadsRequest:new(seq)
-	local o = {}
-	setmetatable(o, self)
-	o.seq = seq
-	return o
-end
+--- @class ThreadsArguments
+
+--- @class ThreadsRequest : Request
+--- @field arguments ThreadsArguments
+--- @field new fun(self, seq: number, arguments: ThreadsArguments)
 
 return ThreadsRequest

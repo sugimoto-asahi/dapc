@@ -2,9 +2,8 @@ local Message = require("dapc.rpc.Message")
 
 --- @class Request : Message
 --- @field command RequestCommand
---- @field arguments string
+--- @field arguments any
 local Request = Message:new(Message.MessageType.REQUEST)
-Request.__index = Request
 
 --- @enum RequestCommand
 Request.COMMAND = {
@@ -54,11 +53,27 @@ Request.COMMAND = {
 }
 
 --- Constructor
---- @param command RequestCommand
-function Request:new(command)
+--- @overload fun(cmd_or_seq: number, arguments?: any)
+--- @param cmd_or_seq RequestCommand
+--- @note When called with a single argument, it must be a RequestCommand.
+--- This invocation is used to subclass the Request class into one of the
+--- several concrete request classes.
+--- When called with two arguments, the arguments are (seq, arguments), where
+--- seq is the sequence number to assign to this message, and arguments is the
+--- table of arguments for this request. This invocation should only be invoked
+--- by users looking to create instances of concrete request classes.
+function Request:new(cmd_or_seq, arguments)
 	local o = {}
 	setmetatable(o, self)
-	o.command = command
+	self.__index = self
+	if arguments == nil then
+		--- 1 argument
+		o.command = cmd_or_seq
+	else
+		--- 2 arguments
+		o.seq = cmd_or_seq
+		o.arguments = arguments
+	end
 	return o
 end
 

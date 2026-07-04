@@ -1,0 +1,12 @@
+--- @class EvaluateResponseBody
+--- @field result string
+--- @field type? string
+--- @field presentationHint? VariablePresentationHint
+--- @field variablesReference number
+--- @field namedVariables? number
+--- @field indexedVariables? number
+--- @field memoryReference? string
+--- @field valueLocationReference? number
+
+--- @class EvaluateResponse : Response
+--- @field body EvaluateResponseBody

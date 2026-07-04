@@ -1,0 +1,1 @@
+--- @class PauseResponse : Response

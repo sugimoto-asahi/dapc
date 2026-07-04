@@ -1,0 +1,11 @@
+--- @class SetVariableResponseBody
+--- @field value string
+--- @field type? string
+--- @field variablesReference? number
+--- @field namedVariables? number
+--- @field indexedVariables? number
+--- @field memoryReference? string
+--- @field valueLocationReference? number
+
+--- @class SetVariableResponse : Response
+--- @field body SetVariableResponseBody

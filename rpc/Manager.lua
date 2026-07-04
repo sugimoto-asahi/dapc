@@ -59,6 +59,7 @@ end
 --- @param response Response
 function Manager.process_response(response)
 	if response.command == request.COMMAND.INITIALIZE then
+		vim.print("2")
 		local launch_request = request.Launch:new(Manager.get_next_seq(), {
 			name = "lldb-dap",
 			type = "lldb-dap",
