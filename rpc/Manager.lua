@@ -37,9 +37,9 @@ function Manager.init(writer)
 end
 
 --- Send a request to stdout
---- @param request Request Request to send
-function Manager.send_request(request)
-	Manager.writer(to_message(request:get_partial()))
+--- @param req Request Request to send
+function Manager.send_request(req)
+	Manager.writer(to_message(req:get_partial()))
 end
 
 --- Process a message
@@ -58,8 +58,33 @@ end
 --- Process a response message
 --- @param response Response
 function Manager.process_response(response)
-	if response.command == request.COMMAND.INITIALIZE then
-		vim.print("2")
+	Logger.log("Response to command: " .. response.command)
+	if response.command == request.COMMAND.ATTACH then
+		--- @cast response AttachResponse
+	elseif response.command == request.COMMAND.BREAKPOINT_LOCATIONS then
+		--- @cast response BreakpointLocationsResponse
+	elseif response.command == request.COMMAND.COMPLETIONS then
+		--- @cast response CompletionsResponse
+	elseif response.command == request.COMMAND.CONFIGURATION_DONE then
+		--- @cast response ConfigurationDoneResponse
+	elseif response.command == request.COMMAND.CONTINUE then
+		--- @cast response ContinueResponse
+	elseif response.command == request.COMMAND.DATA_BREAKPOINT_INFO then
+		--- @cast response DataBreakpointInfoResponse
+	elseif response.command == request.COMMAND.DISASSEMBLE then
+		--- @cast response DisassembleResponse
+	elseif response.command == request.COMMAND.DISCONNECT then
+		--- @cast response DisconnectResponse
+	elseif response.command == request.COMMAND.EVALUATE then
+		--- @cast response EvaluateResponse
+	elseif response.command == request.COMMAND.EXCEPTION_INFO then
+		--- @cast response ExceptionInfoResponse
+	elseif response.command == request.COMMAND.GOTO then
+		--- @cast response GotoResponse
+	elseif response.command == request.COMMAND.GOTO_TARGETS then
+		--- @cast response GotoTargetsResponse
+	elseif response.command == request.COMMAND.INITIALIZE then
+		--- @cast response InitializeResponse
 		local launch_request = request.Launch:new(Manager.get_next_seq(), {
 			name = "lldb-dap",
 			type = "lldb-dap",
@@ -68,35 +93,27 @@ function Manager.process_response(response)
 			stopOnEntry = false,
 		})
 		Manager.send_request(launch_request)
-	elseif response.command == request.COMMAND.SET_BREAKPOINTS then
-		Logger.log(response)
-		local set_function_breakpoints_req = request.SetFunctionBreakpoints:new(Manager.get_next_seq(), {
-			breakpoints = {},
-		})
-		Manager.send_request(set_function_breakpoints_req)
-	elseif response.command == request.COMMAND.SET_FUNCTION_BREAKPOINTS then
-		Logger.log(response)
-		local set_exception_breakpoints_req = request.SetExceptionBreakpoints:new(Manager.get_next_seq(), {
-			filters = { "cpp_catch", "cpp_throw" },
-		})
-		Manager.send_request(set_exception_breakpoints_req)
-	elseif response.command == request.COMMAND.SET_EXCEPTION_BREAKPOINTS then
-		Logger.log(response)
-		local config_done_request = request.ConfigurationDone:new(Manager.get_next_seq())
-		Manager.send_request(config_done_request)
-	elseif response.command == request.COMMAND.CONFIGURATION_DONE then
-		Logger.log("Configuration done")
-	elseif response.command == request.COMMAND.THREADS then
-		-- TODO
-	elseif response.command == request.COMMAND.STACK_TRACE then
-		--- @cast response StackTraceResponse
-		local first_id = response.body.stackFrames[1].id
-		local scopes_request = request.Scopes:new(Manager.get_next_seq(), {
-			frameId = first_id,
-		})
-		Manager.send_request(scopes_request)
+	elseif response.command == request.COMMAND.LAUNCH then
+		--- @cast response LaunchResponse
+	elseif response.command == request.COMMAND.LOADED_SOURCES then
+		--- @cast response LoadedSourcesResponse
+	elseif response.command == request.COMMAND.LOCATIONS then
+		--- @cast response LocationsResponse
+	elseif response.command == request.COMMAND.MODULES then
+		--- @cast response ModulesResponse
+	elseif response.command == request.COMMAND.NEXT then
+		--- @cast response NextResponse
+	elseif response.command == request.COMMAND.PAUSE then
+		--- @cast response PauseResponse
+	elseif response.command == request.COMMAND.READ_MEMORY then
+		--- @cast response ReadMemoryResponse
+	elseif response.command == request.COMMAND.RESTART then
+		--- @cast response RestartResponse
+	elseif response.command == request.COMMAND.RESTART_FRAME then
+		--- @cast response RestartFrameResponse
+	elseif response.command == request.COMMAND.REVERSE_CONTINUE then
+		--- @cast response ReverseContinueResponse
 	elseif response.command == request.COMMAND.SCOPES then
-		Logger.log(response)
 		--- @cast response ScopesResponse
 		local reference
 		for _, scope in ipairs(response.body.scopes) do
@@ -109,8 +126,59 @@ function Manager.process_response(response)
 			variablesReference = reference,
 		})
 		Manager.send_request(variables_request)
-	elseif response.command == request.COMMAND.VARIABLES then
+	elseif response.command == request.COMMAND.SET_BREAKPOINTS then
+		--- @cast response SetBreakpointsResponse
+		local set_function_breakpoints_req = request.SetFunctionBreakpoints:new(Manager.get_next_seq(), {
+			breakpoints = {},
+		})
+		Manager.send_request(set_function_breakpoints_req)
+	elseif response.command == request.COMMAND.SET_DATA_BREAKPOINTS then
+		--- @cast response SetDataBreakpointsResponse
+	elseif response.command == request.COMMAND.SET_EXCEPTION_BREAKPOINTS then
+		--- @cast response SetExceptionBreakpointsResponse
 		Logger.log(response)
+		local config_done_request = request.ConfigurationDone:new(Manager.get_next_seq(), {})
+		Manager.send_request(config_done_request)
+	elseif response.command == request.COMMAND.SET_EXPRESSION then
+		--- @cast response SetExpressionResponse
+	elseif response.command == request.COMMAND.SET_FUNCTION_BREAKPOINTS then
+		--- @cast response SetFunctionBreakpointsResponse
+		Logger.log(response)
+		local set_exception_breakpoints_req = request.SetExceptionBreakpoints:new(Manager.get_next_seq(), {
+			filters = { "cpp_catch", "cpp_throw" },
+		})
+		Manager.send_request(set_exception_breakpoints_req)
+	elseif response.command == request.COMMAND.SET_INSTRUCTION_BREAKPOINTS then
+		--- @cast response SetInstructionBreakpointsResponse
+	elseif response.command == request.COMMAND.SET_VARIABLE then
+		--- @cast response SetVariableResponse
+	elseif response.command == request.COMMAND.SOURCE then
+		--- @cast response SourceResponse
+	elseif response.command == request.COMMAND.STACK_TRACE then
+		--- @cast response StackTraceResponse
+		local first_id = response.body.stackFrames[1].id
+		local scopes_request = request.Scopes:new(Manager.get_next_seq(), {
+			frameId = first_id,
+		})
+		Manager.send_request(scopes_request)
+	elseif response.command == request.COMMAND.STEP_BACK then
+		--- @cast response StepBackResponse
+	elseif response.command == request.COMMAND.STEP_IN then
+		--- @cast response StepInResponse
+	elseif response.command == request.COMMAND.STEP_IN_TARGETS then
+		--- @cast response StepInTargetsResponse
+	elseif response.command == request.COMMAND.STEP_OUT then
+		--- @cast response StepOutResponse
+	elseif response.command == request.COMMAND.TERMINATE then
+		--- @cast response TerminateResponse
+	elseif response.command == request.COMMAND.TERMINATE_THREADS then
+		--- @cast response TerminateThreadsResponse
+	elseif response.command == request.COMMAND.THREADS then
+		--- @cast response ThreadsResponse
+	elseif response.command == request.COMMAND.VARIABLES then
+		--- @cast response VariablesResponse
+	elseif response.command == request.COMMAND.WRITE_MEMORY then
+		--- @cast response WriteMemoryResponse
 	end
 end
 
