@@ -1,7 +1,12 @@
+local M = {}
 ------------------
 --- Breakpoint ---
 ------------------
---- @alias BreakpointReason "pending" | "failed"
+--- @enum BreakpointReason
+M.BREAKPOINT_REASON = {
+	PENDING = "pending",
+	FAILED = "failed",
+}
 
 --- @class Breakpoint
 --- @field id? number
@@ -38,8 +43,13 @@
 ----------------------------------
 --- BreakpointModeApplicability ---
 ----------------------------------
---- @alias BreakpointModeApplicability "source" | "exception" | "data" | "instruction" | string
-
+--- @enum BreakpointModeApplicability
+M.BREAKPOINT_MODE_APPLICABILITY = {
+	SOURCE = "source",
+	EXCEPTION = "exception",
+	DATA = "data",
+	INSTRUCTION = "instruction",
+}
 --------------------
 --- Capabilities ---
 --------------------
@@ -97,13 +107,23 @@
 -------------------------
 --- ChecksumAlgorithm ---
 -------------------------
---- @alias ChecksumAlgorithm "MD5" | "SHA1" | "SHA256" | "timestamp"
-
+--- @enum ChecksumAlgorithm
+M.CHECKSUM_ALGORITHM = {
+	MD5 = "MD5",
+	SHA1 = "SHA1",
+	SHA256 = "SHA256",
+	TIMESTAMP = "timestamp",
+}
 ------------------------
 --- ColumnDescriptor ---
 ------------------------
---- @alias ColumnDescriptorType "string" | "number" | "boolean" | "unixTimestampUTC"
-
+--- @enum ColumnDescriptorType
+M.COLUMN_DESCRIPTOR_TYPE = {
+	STRING = "string",
+	NUMBER = "number",
+	BOOLEAN = "boolean",
+	UNIX_TIMESTAMP_UTC = "unixTimestampUTC",
+}
 --- @class ColumnDescriptor
 --- @field attributeName string
 --- @field label string
@@ -128,26 +148,28 @@
 --------------------------
 --- CompletionItemType ---
 --------------------------
---- @alias CompletionItemType
----| "method"
----| "function"
----| "constructor"
----| "field"
----| "variable"
----| "class"
----| "interface"
----| "module"
----| "property"
----| "unit"
----| "value"
----| "enum"
----| "keyword"
----| "snippet"
----| "text"
----| "color"
----| "file"
----| "reference"
----| "customcolor"
+--- @enum CompletionItemType
+M.COMPLETION_ITEM_TYPE = {
+	METHOD = "method",
+	FUNCTION = "function",
+	CONSTRUCTOR = "constructor",
+	FIELD = "field",
+	VARIABLE = "variable",
+	CLASS = "class",
+	INTERFACE = "interface",
+	MODULE = "module",
+	PROPERTY = "property",
+	UNIT = "unit",
+	VALUE = "value",
+	ENUM = "enum",
+	KEYWORD = "keyword",
+	SNIPPET = "snippet",
+	TEXT = "text",
+	COLOR = "color",
+	FILE = "file",
+	REFERENCE = "reference",
+	CUSTOMCOLOR = "customcolor",
+}
 
 ----------------------
 --- DataBreakpoint ---
@@ -161,17 +183,21 @@
 ------------------------------
 --- DataBreakpointAccessType ---
 ------------------------------
---- @alias DataBreakpointAccessType
----| "read"
----| "write"
----| "readWrite"
+--- @enum DataBreakpointAccessType
+M.DATA_BREAKPOINT_ACCESS_TYPE = {
+	READ = "read",
+	WRITE = "write",
+	READ_WRITE = "readWrite",
+}
 
 -------------------------------
 --- DisassembledInstruction ---
 -------------------------------
---- @alias DisassembledInstructionPresentationHint
----| "normal"
----| "invalid"
+--- @enum DisassembledInstructionPresentationHint
+M.DISASSEMBLED_INSTRUCTION_PRESENTATION_HINT = {
+	NORMAL = "normal",
+	INVALID = "invalid",
+}
 
 --- @class DisassembledInstruction
 --- @field address string
@@ -188,11 +214,13 @@
 --------------------------
 --- ExceptionBreakMode ---
 --------------------------
---- @alias ExceptionBreakMode
----| "never"
----| "always"
----| "unhandled"
----| "userUnhandled"
+--- @enum ExceptionBreakMode
+M.EXCEPTION_BREAK_MODE = {
+	NEVER = "never",
+	ALWAYS = "always",
+	UNHANDLED = "unhandled",
+	USER_UNHANDLED = "userUnhandled",
+}
 
 ----------------------------------
 --- ExceptionBreakpointsFilter ---
@@ -271,12 +299,13 @@
 ------------------------
 --- InvalidatedAreas ---
 ------------------------
---- @alias InvalidatedAreas
----| "all"
----| "stacks"
----| "threads"
----| "variables"
----| string
+--- @enum InvalidatedAreas
+M.INVALIDATED_AREAS = {
+	ALL = "all",
+	STACKS = "stacks",
+	THREADS = "threads",
+	VARIABLES = "variables",
+}
 
 ---------------
 --- Message ---
@@ -308,12 +337,13 @@
 -------------
 --- Scope ---
 -------------
---- @alias ScopePresentationHint
----| "arguments"
----| "locals"
----| "registers"
----| "returnValue"
----| string
+--- @enum ScopePresentationHint
+M.SCOPE_PRESENTATION_HINT = {
+	ARGUMENTS = "arguments",
+	LOCALS = "locals",
+	REGISTERS = "registers",
+	RETURN_VALUE = "returnValue",
+}
 
 --- @class Scope
 --- @field name string
@@ -331,10 +361,12 @@
 --------------
 --- Source ---
 --------------
---- @alias SourcePresentationHint
----| "normal"
----| "emphasize"
----| "deemphasize"
+--- @enum SourcePresentationHint
+M.SOURCE_PRESENTATION_HINT = {
+	NORMAL = "normal",
+	EMPHASIZE = "emphasize",
+	DEEMPHASIZE = "deemphasize",
+}
 
 --- @class Source
 --- @field name? string
@@ -360,10 +392,12 @@
 ------------------
 --- StackFrame ---
 ------------------
---- @alias StackFramePresentationHint
----| "normal"
----| "label"
----| "subtle"
+--- @enum StackFramePresentationHint
+M.STACK_FRAME_PRESENTATION_HINT = {
+	NORMAL = "normal",
+	LABEL = "label",
+	SUBTLE = "subtle",
+}
 
 --- @class StackFrame
 --- @field id number
@@ -404,10 +438,12 @@
 ---------------------------
 --- SteppingGranularity ---
 ---------------------------
---- @alias SteppingGranularity
----| "statement"
----| "line"
----| "instruction"
+--- @enum SteppingGranularity
+M.STEPPING_GRANULARITY = {
+	STATEMENT = "statement",
+	LINE = "line",
+	INSTRUCTION = "instruction",
+}
 
 --------------
 --- Thread ---
@@ -441,41 +477,46 @@
 --------------------------------
 --- VariablePresentationHint ---
 --------------------------------
---- @alias VariablePresentationHintKind
----| "property"
----| "method"
----| "class"
----| "data"
----| "event"
----| "baseClass"
----| "innerClass"
----| "interface"
----| "mostDerivedClass"
----| "virtual"
----| "dataBreakpoint"
----| string
+--- @enum VariablePresentationHintKind
+M.VARIABLE_PRESENTATION_HINT_KIND = {
+	PROPERTY = "property",
+	METHOD = "method",
+	CLASS = "class",
+	DATA = "data",
+	EVENT = "event",
+	BASE_CLASS = "baseClass",
+	INNER_CLASS = "innerClass",
+	INTERFACE = "interface",
+	MOST_DERIVED_CLASS = "mostDerivedClass",
+	VIRTUAL = "virtual",
+	DATA_BREAKPOINT = "dataBreakpoint",
+}
 
---- @alias VariablePresentationHintAttributes
----| "static"
----| "constant"
----| "readOnly"
----| "rawString"
----| "hasObjectId"
----| "canHaveObjectId"
----| "hasSideEffects"
----| "hasDataBreakpoint"
----| string
+--- @enum VariablePresentationHintAttributes
+M.VARIABLE_PRESENTATION_HINT_ATTRIBUTES = {
+	STATIC = "static",
+	CONSTANT = "constant",
+	READ_ONLY = "readOnly",
+	RAW_STRING = "rawString",
+	HAS_OBJECT_ID = "hasObjectId",
+	CAN_HAVE_OBJECT_ID = "canHaveObjectId",
+	HAS_SIDE_EFFECTS = "hasSideEffects",
+	HAS_DATA_BREAKPOINT = "hasDataBreakpoint",
+}
 
---- @alias VariablePresentationHintVisibility
----| "public"
----| "private"
----| "protected"
----| "internal"
----| "final"
----| string
+--- @enum VariablePresentationHintVisibility
+M.VARIABLE_PRESENTATION_HINT_VISIBILITY = {
+	PUBLIC = "public",
+	PRIVATE = "private",
+	PROTECTED = "protected",
+	INTERNAL = "internal",
+	FINAL = "final",
+}
 
 --- @class VariablePresentationHint
 --- @field kind? VariablePresentationHintKind
 --- @field attributes? VariablePresentationHintAttributes[]
 --- @field visibility? VariablePresentationHintVisibility
 --- @field lazy? boolean
+
+return M
