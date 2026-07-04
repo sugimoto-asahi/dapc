@@ -6,7 +6,7 @@ local Message = require("dapc.rpc.Message")
 local Event = {}
 
 --- @enum EventType
-Event.EventType = {
+Event.EVENT_TYPE = {
 	BREAKPOINT = "breakpoint",
 	CAPABILILTIES = "capabilities",
 	CONTINUED = "continued",

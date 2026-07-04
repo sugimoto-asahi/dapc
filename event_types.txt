@@ -1,0 +1,17 @@
+Breakpoint
+Capabilities
+Continued
+Exited
+Initialized
+Invalidated
+LoadedSource
+Memory
+Module
+Output
+Process
+ProgressEnd
+ProgressStart
+ProgressUpdate
+Stopped
+Terminated
+Thread

@@ -200,8 +200,8 @@ function Manager.process_event(event)
 		Manager.send_request(set_breakpoints_request)
 	elseif event.event == Event.EventType.STOPPED then
 		Logger.log("Event: Stopped, Reason: " .. event.body.reason)
-		if event.body.reason == StoppedEvent.Reason.ENTRY then
-		elseif event.body.reason == StoppedEvent.Reason.BREAKPOINT then
+		if event.body.reason == StoppedEvent.REASON.ENTRY then
+		elseif event.body.reason == StoppedEvent.REASON.BREAKPOINT then
 			--- @cast event StoppedEvent
 			-- We are stopped at one of our breakpoints, so
 			-- we start collecting all the stack data for the stopped thread

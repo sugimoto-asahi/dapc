@@ -10,10 +10,9 @@
 --- @class StoppedEvent : Event
 --- @field body StoppedEventBody
 local StoppedEvent = {}
-StoppedEvent.__index = StoppedEvent
 
 --- @enum StoppedEventReason
-StoppedEvent.Reason = {
+StoppedEvent.REASON = {
 	STEP = "step",
 	BREAKPOINT = "breakpoint",
 	EXCEPTION = "exception",
