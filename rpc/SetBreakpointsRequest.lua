@@ -2,24 +2,6 @@ local Request = require("dapc.rpc.Request")
 
 --- @alias SetBreakpointsArgumentsPresentationHint "normal" | "emphasize" | "deemphasize"
 
---- @class Source
---- @field name? string
---- @field path? string
---- @field sourceReference? number
---- @field presentationHint? SetBreakpointsArgumentsPresentationHint
---- @field origin? string
---- @field sources? Source[]
---- @field adapterData? any
---- @field checksums? Checksum[]
-
---- @class SourceBreakpoint
---- @field line number
---- @field column? number
---- @field condition? string
---- @field hitCondition? string
---- @field logMessage? string
---- @field mode? string
-
 --- @class SetBreakpointsArguments
 --- @field source Source
 --- @field breakpoints? SourceBreakpoint[]

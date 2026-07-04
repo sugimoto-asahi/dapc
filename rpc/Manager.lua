@@ -1,7 +1,9 @@
 local InitializeRequest = require("dapc.rpc.InitializeRequest")
+local VariablesRequest = require("dapc.rpc.VariablesRequest")
 local ContinueRequest = require("dapc.rpc.ContinueRequest")
 local StackTraceRequest = require("dapc.rpc.StackTraceRequest")
 local ThreadsRequest = require("dapc.rpc.ThreadsRequest")
+local ScopesRequest = require("dapc.rpc.ScopesRequest")
 local SetBreakpointsRequest = require("dapc.rpc.SetBreakpointsRequest")
 local SetFunctionBreakpointsRequest = require("dapc.rpc.SetFunctionBreakpointsRequest")
 local SetExceptionBreakpointsRequest = require("dapc.rpc.SetExceptionBreakpointsRequest")
@@ -68,7 +70,6 @@ end
 --- @param response Response
 function Manager.process_response(response)
 	if response.command == Request.RequestCommand.INITIALIZE then
-		Logger.log(response)
 		local launch_request = LaunchRequest:new(Manager.get_next_seq(), {
 			name = "lldb-dap",
 			type = "lldb-dap",
@@ -98,7 +99,27 @@ function Manager.process_response(response)
 	elseif response.command == Request.RequestCommand.THREADS then
 		-- TODO
 	elseif response.command == Request.RequestCommand.STACK_TRACE then
-		vim.print("here")
+		--- @cast response StackTraceResponse
+		local first_id = response.body.stackFrames[1].id
+		local scopes_request = ScopesRequest:new(Manager.get_next_seq(), {
+			frameId = first_id,
+		})
+		Manager.send_request(scopes_request)
+	elseif response.command == Request.RequestCommand.SCOPES then
+		Logger.log(response)
+		--- @cast response ScopesResponse
+		local reference
+		for _, scope in ipairs(response.body.scopes) do
+			if scope.presentationHint == "locals" then
+				reference = scope.variablesReference
+				break
+			end
+		end
+		local variables_request = VariablesRequest:new(Manager.get_next_seq(), {
+			variablesReference = reference,
+		})
+		Manager.send_request(variables_request)
+	elseif response.command == Request.RequestCommand.VARIABLES then
 		Logger.log(response)
 	end
 end
@@ -114,14 +135,13 @@ function Manager.process_event(event)
 			},
 			breakpoints = {
 				{
-					line = 8,
+					line = 9,
 				},
 			},
 		})
 		Manager.send_request(set_breakpoints_request)
 	elseif event.event == Event.EventType.STOPPED then
 		Logger.log("Event: Stopped, Reason: " .. event.body.reason)
-		vim.print("here")
 		if event.body.reason == StoppedEvent.Reason.ENTRY then
 		elseif event.body.reason == StoppedEvent.Reason.BREAKPOINT then
 			--- @cast event StoppedEvent

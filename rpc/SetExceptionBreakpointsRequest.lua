@@ -1,20 +1,5 @@
 local Request = require("dapc.rpc.Request")
 
---- @class ExceptionFilterOptions
---- @field filterId string
---- @field condition? string
---- @field mode? string
-
---- @class ExceptionPathSegment
---- @field negate? boolean
---- @field names string[]
-
---- @alias ExceptionBreakMode "never" | "always" | "unhandled" | "userUnhandled"
-
---- @class ExceptionOptions
---- @field path? ExceptionPathSegment[]
---- @field breakMode ExceptionBreakMode
-
 --- @class SetExceptionBreakpointsArguments
 --- @field filters string[]
 --- @field filterOptions? ExceptionFilterOptions[]

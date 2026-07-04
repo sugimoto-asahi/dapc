@@ -1,10 +1,5 @@
 local Request = require("dapc.rpc.Request")
 
---- @class FunctionBreakpoint
---- @field name string
---- @field condition? string
---- @field hitCondition? string
-
 --- @class SetFunctionBreakpointsArguments
 --- @field breakpoints FunctionBreakpoint[]
 

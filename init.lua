@@ -86,7 +86,6 @@ local function handle_read_start(err, data)
 			return
 		end
 
-		vim.print(buffer)
 		buffer = string.sub(buffer, total_length + 1)
 
 		for _, message in ipairs(messages) do
