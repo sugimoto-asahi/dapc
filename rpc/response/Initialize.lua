@@ -1,5 +1,3 @@
-local Response = require("dapc.rpc.Response")
-
 --- @class ExceptionBreakpointFilter
 --- @field filter string
 --- @field label string
@@ -10,6 +8,3 @@ local Response = require("dapc.rpc.Response")
 
 --- @class InitializeResponse : Response
 --- @field body Capabilities
-local InitializeResponse = {}
-
-return InitializeResponse

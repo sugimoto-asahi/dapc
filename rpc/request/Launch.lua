@@ -1,8 +1,8 @@
-local Request = require("dapc.rpc.Request")
+local Request = require("dapc.rpc.request.Request")
 
 --- @class LaunchRequest : Request
 --- @field arguments LaunchRequestArguments
-local LaunchRequest = Request:new(Request.RequestCommand.LAUNCH)
+local LaunchRequest = Request:new(Request.COMMAND.LAUNCH)
 LaunchRequest.__index = LaunchRequest
 
 --- @class LaunchRequestArguments

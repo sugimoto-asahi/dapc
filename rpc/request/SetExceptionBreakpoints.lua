@@ -1,4 +1,4 @@
-local Request = require("dapc.rpc.Request")
+local Request = require("dapc.rpc.request.Request")
 
 --- @class SetExceptionBreakpointsArguments
 --- @field filters string[]
@@ -7,7 +7,7 @@ local Request = require("dapc.rpc.Request")
 
 --- @class SetExceptionBreakpointsRequest : Request
 --- @field arguments SetExceptionBreakpointsArguments
-local SetExceptionBreakpointsRequest = Request:new(Request.RequestCommand.SET_EXCEPTION_BREAKPOINTS)
+local SetExceptionBreakpointsRequest = Request:new(Request.COMMAND.SET_EXCEPTION_BREAKPOINTS)
 SetExceptionBreakpointsRequest.__index = SetExceptionBreakpointsRequest
 
 --- Constructor

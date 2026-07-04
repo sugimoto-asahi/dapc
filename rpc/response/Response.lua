@@ -9,7 +9,7 @@ local Message = require("dapc.rpc.Message")
 local Response = {}
 
 --- @enum ResponseMessage
-Response.ResponseMessage = {
+Response.MESSAGE = {
 	CANCELLED = "cancelled",
 	NOTSTOPPED = "notstopped",
 }

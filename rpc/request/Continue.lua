@@ -1,11 +1,11 @@
-local Request = require("dapc.rpc.Request")
+local Request = require("dapc.rpc.request.Request")
 
 --- @class ContinueArguments
 --- @field threadId number Thread to continue
 
 --- @class ContinueRequest : Request
 --- @field arguments ContinueArguments
-local ContinueRequest = Request:new(Request.RequestCommand.CONTINUE)
+local ContinueRequest = Request:new(Request.COMMAND.CONTINUE)
 ContinueRequest.__index = ContinueRequest
 
 --- Constructor

@@ -1,6 +1,4 @@
 local Manager = require("dapc.rpc.Manager")
-local InitializeRequest = require("dapc.rpc.InitializeRequest")
-local LaunchRequest = require("dapc.rpc.LaunchRequest")
 
 local Log = require("logger")
 local M = {}

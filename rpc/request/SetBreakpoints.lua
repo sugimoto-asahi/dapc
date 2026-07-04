@@ -1,4 +1,4 @@
-local Request = require("dapc.rpc.Request")
+local Request = require("dapc.rpc.request.Request")
 
 --- @alias SetBreakpointsArgumentsPresentationHint "normal" | "emphasize" | "deemphasize"
 
@@ -10,7 +10,7 @@ local Request = require("dapc.rpc.Request")
 
 --- @class SetBreakpointsRequest : Request
 --- @field arguments SetBreakpointsArguments
-local SetBreakpointsRequest = Request:new(Request.RequestCommand.SET_BREAKPOINTS)
+local SetBreakpointsRequest = Request:new(Request.COMMAND.SET_BREAKPOINTS)
 SetBreakpointsRequest.__index = SetBreakpointsRequest
 
 --- Constructor

@@ -1,7 +1,7 @@
-local Request = require("dapc.rpc.Request")
+local Request = require("dapc.rpc.request.Request")
 
 --- @class VariablesRequest : Request
-local VariablesRequest = Request:new(Request.RequestCommand.VARIABLES)
+local VariablesRequest = Request:new(Request.COMMAND.VARIABLES)
 VariablesRequest.__index = VariablesRequest
 
 --- @enum VariablesRequestFilter

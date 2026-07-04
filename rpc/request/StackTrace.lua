@@ -1,7 +1,7 @@
-local Request = require("dapc.rpc.Request")
+local Request = require("dapc.rpc.request.Request")
 
 --- @class StackTraceRequest : Request
-local StackTraceRequest = Request:new(Request.RequestCommand.STACK_TRACE)
+local StackTraceRequest = Request:new(Request.COMMAND.STACK_TRACE)
 StackTraceRequest.__index = StackTraceRequest
 
 --- @class StackTraceRequestArguments
@@ -9,13 +9,6 @@ StackTraceRequest.__index = StackTraceRequest
 --- @field startFrame? number
 --- @field levels? number
 --- @field format? StackFrameFormat
-
---- @class StackTraceResponseBody
---- @field stackFrames StackFrame[]
---- @field totalFrames? number
-
---- @class StackTraceResponse : Response
---- @field body StackTraceResponseBody
 
 --- Constructor
 --- @param seq number Sequence number to assign to this request

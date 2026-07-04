@@ -7,7 +7,7 @@ local Request = Message:new(Message.MessageType.REQUEST)
 Request.__index = Request
 
 --- @enum RequestCommand
-Request.RequestCommand = {
+Request.COMMAND = {
 	NONE = "none", -- nil value
 	ATTACH = "attach",
 	BREAKPOINT_LOCATIONS = "breakpointLocations",

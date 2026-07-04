@@ -1,17 +1,11 @@
-local Request = require("dapc.rpc.Request")
+local Request = require("dapc.rpc.request.Request")
 
 --- @class ScopesArguments
 --- @field frameId number
 
 --- @class ScopesRequest : Request
-local ScopesRequest = Request:new(Request.RequestCommand.SCOPES)
+local ScopesRequest = Request:new(Request.COMMAND.SCOPES)
 ScopesRequest.__index = ScopesRequest
-
---- @class ScopesResponseBody
---- @field scopes Scope[]
-
---- @class ScopesResponse : Response
---- @field body ScopesResponseBody
 
 --- Constructor
 --- @param seq number Sequence number to assign to this request

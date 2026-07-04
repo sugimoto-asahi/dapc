@@ -1,8 +1,8 @@
-local Request = require("dapc.rpc.Request")
+local Request = require("dapc.rpc.request.Request")
 
 --- @class InitializeRequest : Request
 --- @field arguments InitializeRequestArguments
-local InitializeRequest = Request:new(Request.RequestCommand.INITIALIZE)
+local InitializeRequest = Request:new(Request.COMMAND.INITIALIZE)
 InitializeRequest.__index = InitializeRequest
 
 --- @enum InitializeRequestArgumentsPathFormat

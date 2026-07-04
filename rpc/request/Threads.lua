@@ -1,7 +1,7 @@
-local Request = require("dapc.rpc.Request")
+local Request = require("dapc.rpc.request.Request")
 
 --- @class ThreadsRequest : Request
-local ThreadsRequest = Request:new(Request.RequestCommand.THREADS)
+local ThreadsRequest = Request:new(Request.COMMAND.THREADS)
 ThreadsRequest.__index = ThreadsRequest
 
 --- Constructor

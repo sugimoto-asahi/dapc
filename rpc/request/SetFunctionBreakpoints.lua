@@ -1,11 +1,11 @@
-local Request = require("dapc.rpc.Request")
+local Request = require("dapc.rpc.request.Request")
 
 --- @class SetFunctionBreakpointsArguments
 --- @field breakpoints FunctionBreakpoint[]
 
 --- @class SetFunctionBreakpointsRequest : Request
 --- @field arguments SetFunctionBreakpointsArguments
-local SetFunctionBreakpointsRequest = Request:new(Request.RequestCommand.SET_FUNCTION_BREAKPOINTS)
+local SetFunctionBreakpointsRequest = Request:new(Request.COMMAND.SET_FUNCTION_BREAKPOINTS)
 SetFunctionBreakpointsRequest.__index = SetFunctionBreakpointsRequest
 
 --- Constructor

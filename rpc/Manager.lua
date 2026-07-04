@@ -1,19 +1,8 @@
-local InitializeRequest = require("dapc.rpc.InitializeRequest")
-local VariablesRequest = require("dapc.rpc.VariablesRequest")
-local ContinueRequest = require("dapc.rpc.ContinueRequest")
-local StackTraceRequest = require("dapc.rpc.StackTraceRequest")
-local ThreadsRequest = require("dapc.rpc.ThreadsRequest")
-local ScopesRequest = require("dapc.rpc.ScopesRequest")
-local SetBreakpointsRequest = require("dapc.rpc.SetBreakpointsRequest")
-local SetFunctionBreakpointsRequest = require("dapc.rpc.SetFunctionBreakpointsRequest")
-local SetExceptionBreakpointsRequest = require("dapc.rpc.SetExceptionBreakpointsRequest")
-local ConfigurationDoneRequest = require("dapc.rpc.ConfigurationDoneRequest")
-local LaunchRequest = require("dapc.rpc.LaunchRequest")
-local Request = require("dapc.rpc.Request")
 local Event = require("dapc.rpc.Event")
 local Message = require("dapc.rpc.Message")
 local StoppedEvent = require("dapc.rpc.StoppedEvent")
 local Logger = require("logger")
+local request = require("dapc.rpc.request")
 
 --- @class DAP Manager
 --- @field current_seq number Current JSON-RPC sequence number
@@ -43,7 +32,7 @@ end
 --- @param writer function Callable that writes a string to stdout
 function Manager.init(writer)
 	Manager.writer = writer
-	local init_request = InitializeRequest:new(Manager.get_next_seq(), { adapterID = "lldb-dap" })
+	local init_request = request.Initialize:new(Manager.get_next_seq(), { adapterID = "lldb-dap" })
 	Manager.send_request(init_request)
 end
 
@@ -69,8 +58,8 @@ end
 --- Process a response message
 --- @param response Response
 function Manager.process_response(response)
-	if response.command == Request.RequestCommand.INITIALIZE then
-		local launch_request = LaunchRequest:new(Manager.get_next_seq(), {
+	if response.command == request.COMMAND.INITIALIZE then
+		local launch_request = request.Launch:new(Manager.get_next_seq(), {
 			name = "lldb-dap",
 			type = "lldb-dap",
 			request = "launch",
@@ -78,34 +67,34 @@ function Manager.process_response(response)
 			stopOnEntry = false,
 		})
 		Manager.send_request(launch_request)
-	elseif response.command == Request.RequestCommand.SET_BREAKPOINTS then
+	elseif response.command == request.COMMAND.SET_BREAKPOINTS then
 		Logger.log(response)
-		local set_function_breakpoints_req = SetFunctionBreakpointsRequest:new(Manager.get_next_seq(), {
+		local set_function_breakpoints_req = request.SetFunctionBreakpoints:new(Manager.get_next_seq(), {
 			breakpoints = {},
 		})
 		Manager.send_request(set_function_breakpoints_req)
-	elseif response.command == Request.RequestCommand.SET_FUNCTION_BREAKPOINTS then
+	elseif response.command == request.COMMAND.SET_FUNCTION_BREAKPOINTS then
 		Logger.log(response)
-		local set_exception_breakpoints_req = SetExceptionBreakpointsRequest:new(Manager.get_next_seq(), {
+		local set_exception_breakpoints_req = request.SetExceptionBreakpoints:new(Manager.get_next_seq(), {
 			filters = { "cpp_catch", "cpp_throw" },
 		})
 		Manager.send_request(set_exception_breakpoints_req)
-	elseif response.command == Request.RequestCommand.SET_EXCEPTION_BREAKPOINTS then
+	elseif response.command == request.COMMAND.SET_EXCEPTION_BREAKPOINTS then
 		Logger.log(response)
-		local config_done_request = ConfigurationDoneRequest:new(Manager.get_next_seq())
+		local config_done_request = request.ConfigurationDone:new(Manager.get_next_seq())
 		Manager.send_request(config_done_request)
-	elseif response.command == Request.RequestCommand.CONFIGURATION_DONE then
+	elseif response.command == request.COMMAND.CONFIGURATION_DONE then
 		Logger.log("Configuration done")
-	elseif response.command == Request.RequestCommand.THREADS then
+	elseif response.command == request.COMMAND.THREADS then
 		-- TODO
-	elseif response.command == Request.RequestCommand.STACK_TRACE then
+	elseif response.command == request.COMMAND.STACK_TRACE then
 		--- @cast response StackTraceResponse
 		local first_id = response.body.stackFrames[1].id
-		local scopes_request = ScopesRequest:new(Manager.get_next_seq(), {
+		local scopes_request = request.Scopes:new(Manager.get_next_seq(), {
 			frameId = first_id,
 		})
 		Manager.send_request(scopes_request)
-	elseif response.command == Request.RequestCommand.SCOPES then
+	elseif response.command == request.COMMAND.SCOPES then
 		Logger.log(response)
 		--- @cast response ScopesResponse
 		local reference
@@ -115,11 +104,11 @@ function Manager.process_response(response)
 				break
 			end
 		end
-		local variables_request = VariablesRequest:new(Manager.get_next_seq(), {
+		local variables_request = request.Variables:new(Manager.get_next_seq(), {
 			variablesReference = reference,
 		})
 		Manager.send_request(variables_request)
-	elseif response.command == Request.RequestCommand.VARIABLES then
+	elseif response.command == request.COMMAND.VARIABLES then
 		Logger.log(response)
 	end
 end
@@ -129,7 +118,7 @@ end
 --- @param event Event
 function Manager.process_event(event)
 	if event.event == Event.EventType.INITIALIZED then
-		local set_breakpoints_request = SetBreakpointsRequest:new(Manager.get_next_seq(), {
+		local set_breakpoints_request = request.SetBreakpoints:new(Manager.get_next_seq(), {
 			source = {
 				path = "C:\\Users\\juayh\\Dev\\test\\src\\main.cpp",
 			},
@@ -147,7 +136,7 @@ function Manager.process_event(event)
 			--- @cast event StoppedEvent
 			-- We are stopped at one of our breakpoints, so
 			-- we start collecting all the stack data for the stopped thread
-			local stack_trace_request = StackTraceRequest:new(Manager.get_next_seq(), {
+			local stack_trace_request = request.StackTrace:new(Manager.get_next_seq(), {
 				threadId = event.body.threadId,
 			})
 			Manager.send_request(stack_trace_request)

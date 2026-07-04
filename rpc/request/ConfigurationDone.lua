@@ -1,10 +1,10 @@
-local Request = require("dapc.rpc.Request")
+local Request = require("dapc.rpc.request.Request")
 
 --- @class ConfigurationDoneArguments
 
 --- @class ConfigurationDoneRequest : Request
 --- @field arguments ConfigurationDoneArguments
-local ConfigurationDoneRequest = Request:new(Request.RequestCommand.CONFIGURATION_DONE)
+local ConfigurationDoneRequest = Request:new(Request.COMMAND.CONFIGURATION_DONE)
 ConfigurationDoneRequest.__index = ConfigurationDoneRequest
 
 --- Constructor
