@@ -1,5 +1,481 @@
---- @alias ChecksumAlgorithm "MD5" | "SHA1" | "SHA256" | "timestamp"
+------------------
+--- Breakpoint ---
+------------------
+--- @alias BreakpointReason "pending" | "failed"
 
+--- @class Breakpoint
+--- @field id? number
+--- @field verified boolean
+--- @field message? string
+--- @field source? Source
+--- @field line? number
+--- @field column? number
+--- @field endLine? number
+--- @field endColumn? number
+--- @field instructionReference? string
+--- @field offset? number
+--- @field reason? BreakpointReason
+
+--------------------------
+--- BreakpointLocation ---
+--------------------------
+
+--- @class BreakpointLocation
+--- @field line number
+--- @field column? number
+--- @field endLine? number
+--- @field endColumn? number
+
+----------------------
+--- BreakpointMode ---
+----------------------
+--- @class BreakpointMode
+--- @field mode string
+--- @field label string
+--- @field description? string
+--- @field appliesTo BreakpointModeApplicability[]
+
+----------------------------------
+--- BreakpointModeApplicability ---
+----------------------------------
+--- @alias BreakpointModeApplicability "source" | "exception" | "data" | "instruction" | string
+
+--------------------
+--- Capabilities ---
+--------------------
+--- @class Capabilities
+--- @field supportsConfigurationDoneRequest? boolean
+--- @field supportsFunctionBreakpoints? boolean
+--- @field supportsConditionalBreakpoints? boolean
+--- @field supportsHitConditionalBreakpoints? boolean
+--- @field supportsEvaluateForHovers? boolean
+--- @field exceptionBreakpointFilters? ExceptionBreakpointsFilter[]
+--- @field supportsStepBack? boolean
+--- @field supportsSetVariable? boolean
+--- @field supportsRestartFrame? boolean
+--- @field supportsGotoTargetsRequest? boolean
+--- @field supportsStepInTargetsRequest? boolean
+--- @field supportsCompletionsRequest? boolean
+--- @field completionTriggerCharacters? string[]
+--- @field supportsModulesRequest? boolean
+--- @field additionalModuleColumns? ColumnDescriptor[]
+--- @field supportedChecksumAlgorithms? ChecksumAlgorithm[]
+--- @field supportsRestartRequest? boolean
+--- @field supportsExceptionOptions? boolean
+--- @field supportsValueFormattingOptions? boolean
+--- @field supportsExceptionInfoRequest? boolean
+--- @field supportTerminateDebuggee? boolean
+--- @field supportSuspendDebuggee? boolean
+--- @field supportsDelayedStackTraceLoading? boolean
+--- @field supportsLoadedSourcesRequest? boolean
+--- @field supportsLogPoints? boolean
+--- @field supportsTerminateThreadsRequest? boolean
+--- @field supportsSetExpression? boolean
+--- @field supportsTerminateRequest? boolean
+--- @field supportsDataBreakpoints? boolean
+--- @field supportsReadMemoryRequest? boolean
+--- @field supportsWriteMemoryRequest? boolean
+--- @field supportsDisassembleRequest? boolean
+--- @field supportsCancelRequest? boolean
+--- @field supportsBreakpointLocationsRequest? boolean
+--- @field supportsClipboardContext? boolean
+--- @field supportsSteppingGranularity? boolean
+--- @field supportsInstructionBreakpoints? boolean
+--- @field supportsExceptionFilterOptions? boolean
+--- @field supportsSingleThreadExecutionRequests? boolean
+--- @field supportsDataBreakpointBytes? boolean
+--- @field breakpointModes? BreakpointMode[]
+--- @field supportsANSIStyling? boolean
+
+----------------
+--- Checksum ---
+----------------
 --- @class Checksum
 --- @field algorithm ChecksumAlgorithm
 --- @field checksum string
+
+-------------------------
+--- ChecksumAlgorithm ---
+-------------------------
+--- @alias ChecksumAlgorithm "MD5" | "SHA1" | "SHA256" | "timestamp"
+
+------------------------
+--- ColumnDescriptor ---
+------------------------
+--- @alias ColumnDescriptorType "string" | "number" | "boolean" | "unixTimestampUTC"
+
+--- @class ColumnDescriptor
+--- @field attributeName string
+--- @field label string
+--- @field format? string
+--- @field type? ColumnDescriptorType
+--- @field width? number
+
+----------------------
+--- CompletionItem ---
+----------------------
+--- @class CompletionItem
+--- @field label string
+--- @field text? string
+--- @field sortText? string
+--- @field detail? string
+--- @field type? CompletionItemType
+--- @field start? number
+--- @field length? number
+--- @field selectionStart? number
+--- @field selectionLength? number
+
+--------------------------
+--- CompletionItemType ---
+--------------------------
+--- @alias CompletionItemType
+---| "method"
+---| "function"
+---| "constructor"
+---| "field"
+---| "variable"
+---| "class"
+---| "interface"
+---| "module"
+---| "property"
+---| "unit"
+---| "value"
+---| "enum"
+---| "keyword"
+---| "snippet"
+---| "text"
+---| "color"
+---| "file"
+---| "reference"
+---| "customcolor"
+
+----------------------
+--- DataBreakpoint ---
+----------------------
+--- @class DataBreakpoint
+--- @field dataId string
+--- @field accessType? DataBreakpointAccessType
+--- @field condition? string
+--- @field hitCondition? string
+
+------------------------------
+--- DataBreakpointAccessType ---
+------------------------------
+--- @alias DataBreakpointAccessType
+---| "read"
+---| "write"
+---| "readWrite"
+
+-------------------------------
+--- DisassembledInstruction ---
+-------------------------------
+--- @alias DisassembledInstructionPresentationHint
+---| "normal"
+---| "invalid"
+
+--- @class DisassembledInstruction
+--- @field address string
+--- @field instructionBytes? string
+--- @field instruction string
+--- @field symbol? string
+--- @field location? Source
+--- @field line? number
+--- @field column? number
+--- @field endLine? number
+--- @field endColumn? number
+--- @field presentationHint? DisassembledInstructionPresentationHint
+
+--------------------------
+--- ExceptionBreakMode ---
+--------------------------
+--- @alias ExceptionBreakMode
+---| "never"
+---| "always"
+---| "unhandled"
+---| "userUnhandled"
+
+----------------------------------
+--- ExceptionBreakpointsFilter ---
+----------------------------------
+--- @class ExceptionBreakpointsFilter
+--- @field filter string
+--- @field label string
+--- @field description? string
+--- @field default? boolean
+--- @field supportsCondition? boolean
+--- @field conditionDescription? string
+
+------------------------
+--- ExceptionDetails ---
+------------------------
+--- @class ExceptionDetails
+--- @field message? string
+--- @field typeName? string
+--- @field fullTypeName? string
+--- @field evaluateName? string
+--- @field stackTrace? string
+--- @field innerException? ExceptionDetails[]
+
+------------------------------
+--- ExceptionFilterOptions ---
+------------------------------
+--- @class ExceptionFilterOptions
+--- @field filterId string
+--- @field condition? string
+--- @field mode? string
+
+------------------------
+--- ExceptionOptions ---
+------------------------
+--- @class ExceptionOptions
+--- @field path? ExceptionPathSegment[]
+--- @field breakMode ExceptionBreakMode
+
+----------------------------
+--- ExceptionPathSegment ---
+----------------------------
+--- @class ExceptionPathSegment
+--- @field negate? boolean
+--- @field names string[]
+
+--------------------------
+--- FunctionBreakpoint ---
+--------------------------
+--- @class FunctionBreakpoint
+--- @field name string
+--- @field condition? string
+--- @field hitCondition? string
+
+------------------
+--- GotoTarget ---
+------------------
+--- @class GotoTarget
+--- @field id number
+--- @field label string
+--- @field line number
+--- @field column? number
+--- @field endLine? number
+--- @field endColumn? number
+--- @field instructionPointerReference? string
+
+-----------------------------
+--- InstructionBreakpoint ---
+-----------------------------
+--- @class InstructionBreakpoint
+--- @field instructionReference string
+--- @field offset? number
+--- @field condition? string
+--- @field hitCondition? string
+--- @field mode? string
+
+------------------------
+--- InvalidatedAreas ---
+------------------------
+--- @alias InvalidatedAreas
+---| "all"
+---| "stacks"
+---| "threads"
+---| "variables"
+---| string
+
+---------------
+--- Message ---
+---------------
+--- @class Message
+--- @field id number
+--- @field format string
+--- @field variables? table<string, string>
+--- @field sendTelemetry? boolean
+--- @field showUser? boolean
+--- @field url? string
+--- @field urlLabel? string
+
+--------------
+--- Module ---
+--------------
+--- @class Module
+--- @field id number | string
+--- @field name string
+--- @field path? string
+--- @field isOptimized? boolean
+--- @field isUserCode? boolean
+--- @field version? string
+--- @field symbolStatus? string
+--- @field symbolFilePath? string
+--- @field dateTimeStamp? string
+--- @field addressRange? string
+
+-------------
+--- Scope ---
+-------------
+--- @alias ScopePresentationHint
+---| "arguments"
+---| "locals"
+---| "registers"
+---| "returnValue"
+---| string
+
+--- @class Scope
+--- @field name string
+--- @field presentationHint? ScopePresentationHint
+--- @field variablesReference number
+--- @field namedVariables? number
+--- @field indexedVariables? number
+--- @field expensive boolean
+--- @field source? Source
+--- @field line? number
+--- @field column? number
+--- @field endLine? number
+--- @field endColumn? number
+
+--------------
+--- Source ---
+--------------
+--- @alias SourcePresentationHint
+---| "normal"
+---| "emphasize"
+---| "deemphasize"
+
+--- @class Source
+--- @field name? string
+--- @field path? string
+--- @field sourceReference? number
+--- @field presentationHint? SourcePresentationHint
+--- @field origin? string
+--- @field sources? Source[]
+--- @field adapterData? any
+--- @field checksums? Checksum[]
+
+------------------------
+--- SourceBreakpoint ---
+------------------------
+--- @class SourceBreakpoint
+--- @field line number
+--- @field column? number
+--- @field condition? string
+--- @field hitCondition? string
+--- @field logMessage? string
+--- @field mode? string
+
+------------------
+--- StackFrame ---
+------------------
+--- @alias StackFramePresentationHint
+---| "normal"
+---| "label"
+---| "subtle"
+
+--- @class StackFrame
+--- @field id number
+--- @field name string
+--- @field source? Source
+--- @field line number
+--- @field column number
+--- @field endLine? number
+--- @field endColumn? number
+--- @field canRestart? boolean
+--- @field instructionPointerReference? string
+--- @field moduleId? number | string
+--- @field presentationHint? StackFramePresentationHint
+
+------------------------
+--- StackFrameFormat ---
+------------------------
+--- @class StackFrameFormat : ValueFormat
+--- @field parameters? boolean
+--- @field parameterTypes? boolean
+--- @field parameterNames? boolean
+--- @field parameterValues? boolean
+--- @field line? boolean
+--- @field module? boolean
+--- @field includeAll? boolean
+
+--------------------
+--- StepInTarget ---
+--------------------
+--- @class StepInTarget
+--- @field id number
+--- @field label string
+--- @field line? number
+--- @field column? number
+--- @field endLine? number
+--- @field endColumn? number
+
+---------------------------
+--- SteppingGranularity ---
+---------------------------
+--- @alias SteppingGranularity
+---| "statement"
+---| "line"
+---| "instruction"
+
+--------------
+--- Thread ---
+--------------
+--- @class Thread
+--- @field id number
+--- @field name string
+
+-------------------
+--- ValueFormat ---
+-------------------
+--- @class ValueFormat
+--- @field hex? boolean
+
+----------------
+--- Variable ---
+----------------
+--- @class Variable
+--- @field name string
+--- @field value string
+--- @field type? string
+--- @field presentationHint? VariablePresentationHint
+--- @field evaluateName? string
+--- @field variablesReference number
+--- @field namedVariables? number
+--- @field indexedVariables? number
+--- @field memoryReference? string
+--- @field declarationLocationReference? number
+--- @field valueLocationReference? number
+
+--------------------------------
+--- VariablePresentationHint ---
+--------------------------------
+--- @alias VariablePresentationHintKind
+---| "property"
+---| "method"
+---| "class"
+---| "data"
+---| "event"
+---| "baseClass"
+---| "innerClass"
+---| "interface"
+---| "mostDerivedClass"
+---| "virtual"
+---| "dataBreakpoint"
+---| string
+
+--- @alias VariablePresentationHintAttributes
+---| "static"
+---| "constant"
+---| "readOnly"
+---| "rawString"
+---| "hasObjectId"
+---| "canHaveObjectId"
+---| "hasSideEffects"
+---| "hasDataBreakpoint"
+---| string
+
+--- @alias VariablePresentationHintVisibility
+---| "public"
+---| "private"
+---| "protected"
+---| "internal"
+---| "final"
+---| string
+
+--- @class VariablePresentationHint
+--- @field kind? VariablePresentationHintKind
+--- @field attributes? VariablePresentationHintAttributes[]
+--- @field visibility? VariablePresentationHintVisibility
+--- @field lazy? boolean
