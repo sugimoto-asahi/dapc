@@ -9,7 +9,7 @@ function M.setup() end
 
 local function handle_exit(code, signal)
 	local message = string.format("Process exited with code: %d and signal: %d", code, signal)
-	-- vim.print(message)
+	vim.print(message)
 end
 
 function M.start()

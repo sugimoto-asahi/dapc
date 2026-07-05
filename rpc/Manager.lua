@@ -4,11 +4,14 @@ local Logger = require("logger")
 local Request = require("dapc.rpc.request")
 local types = require("dapc.rpc.Types")
 local share = require("dapc.share")
+local ui = require("dapc.ui")
 
 --- @class DAP Manager
 --- @field current_seq number Current JSON-RPC sequence number
+--- @field current_thread number
 local Manager = {
 	current_seq = 1,
+	current_thread = 0,
 }
 
 Manager.Status = {
@@ -130,7 +133,6 @@ function Manager.process_response(response)
 		Manager.send_request(variables_request)
 	elseif response.command == Request.COMMAND.SET_BREAKPOINTS then
 		--- @cast response SetBreakpointsResponse
-		Logger.log(response)
 		local set_function_breakpoints_req = Request.SetFunctionBreakpoints:new(Manager.get_next_seq(), {
 			breakpoints = {},
 		})
@@ -155,13 +157,37 @@ function Manager.process_response(response)
 		--- @cast response SetVariableResponse
 	elseif response.command == Request.COMMAND.SOURCE then
 		--- @cast response SourceResponse
+		vim.print(response)
 	elseif response.command == Request.COMMAND.STACK_TRACE then
+		Logger.log(response)
 		--- @cast response StackTraceResponse
-		local first_id = response.body.stackFrames[1].id
+		local first_frame = response.body.stackFrames[1]
+		-- https://microsoft.github.io/debug-adapter-protocol/specification#Types_Source
+		-- "A value of 'deemphasize'... source is... skipped on stepping"
+
+		-- We want to step once more and avoid extraneous queries like scopes on
+		-- "deemphasize"d sources
+		if first_frame.source.presentationHint == types.SOURCE_PRESENTATION_HINT.DEEMPHASIZE then
+			local next_request = Request.Next:new(Manager.get_next_seq(), {
+				threadId = Manager.current_thread,
+			})
+			Manager.send_request(next_request)
+			return
+		end
+
 		local scopes_request = Request.Scopes:new(Manager.get_next_seq(), {
-			frameId = first_id,
+			frameId = first_frame.id,
 		})
 		Manager.send_request(scopes_request)
+
+		-- vim.print(first_frame.source.sourceReference)
+		-- local source_request = Request.Source:new(Manager.get_next_seq(), {
+		-- 	sourceReference = first_frame.source.sourceReference,
+		-- })
+		-- Manager.send_request(source_request)
+
+		-- update the display for current execution point
+		ui.set_current_point(first_frame.source.path, first_frame.line)
 	elseif response.command == Request.COMMAND.STEP_BACK then
 		--- @cast response StepBackResponse
 	elseif response.command == Request.COMMAND.STEP_IN then
@@ -232,14 +258,53 @@ function Manager.process_event(event)
 	elseif event.event == Event.EVENT_TYPE.PROGRESS_UPDATE then
 		--- @cast event ProgressUpdateEvent
 	elseif event.event == Event.EVENT_TYPE.STOPPED then
-		if event.body.reason == Event.Stopped.REASON.BREAKPOINT then
-			--- @cast event StoppedEvent
-			-- We are stopped at one of our breakpoints, so
-			-- we start collecting all the stack data for the stopped thread
-			local stack_trace_request = Request.StackTrace:new(Manager.get_next_seq(), {
-				threadId = event.body.threadId,
+		--- @cast event StoppedEvent
+		Manager.current_thread = event.body.threadId
+
+		-- Whenever we stop, gather information about the state of the stopped thread
+		local stack_trace_request = Request.StackTrace:new(Manager.get_next_seq(), {
+			threadId = Manager.current_thread,
+		})
+		Manager.send_request(stack_trace_request)
+
+		-- Enable keymaps (Next, Step In, etc.) for deciding what the debug adapter can do next
+		-- These keymaps are one-time use, and only effective when the
+		-- the debug adapter is stopped.
+		local function next()
+			local next_request = Request.Next:new(Manager.get_next_seq(), {
+				threadId = Manager.current_thread,
 			})
-			Manager.send_request(stack_trace_request)
+			Manager.send_request(next_request)
+		end
+		vim.keymap.set("n", "<leader>dj", function()
+			next()
+			vim.keymap.del("n", "<leader>dj")
+		end, {})
+
+		local function step_in()
+			local step_in_request = Request.StepIn:new(Manager.get_next_seq(), {
+				threadId = Manager.current_thread,
+			})
+			Manager.send_request(step_in_request)
+		end
+		vim.keymap.set("n", "<leader>dl", function()
+			step_in()
+			vim.keymap.del("n", "<leader>dl")
+		end, {})
+
+		local function step_out()
+			local step_out_request = Request.StepOut:new(Manager.get_next_seq(), {
+				threadId = Manager.current_thread,
+			})
+			Manager.send_request(step_out_request)
+		end
+		vim.keymap.set("n", "<leader>dh", function()
+			step_out()
+			vim.keymap.del("n", "<leader>dh")
+		end, {})
+
+		if event.body.reason == Event.Stopped.REASON.BREAKPOINT then
+		elseif event.body.reason == Event.Stopped.REASON.STEP then
 		end
 	elseif event.event == Event.EVENT_TYPE.TERMINATED then
 		--- @cast event TerminatedEvent
