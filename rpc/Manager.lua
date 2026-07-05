@@ -3,6 +3,7 @@ local Message = require("dapc.rpc.Message")
 local Logger = require("logger")
 local Request = require("dapc.rpc.request")
 local types = require("dapc.rpc.Types")
+local share = require("dapc.share")
 
 --- @class DAP Manager
 --- @field current_seq number Current JSON-RPC sequence number
@@ -129,6 +130,7 @@ function Manager.process_response(response)
 		Manager.send_request(variables_request)
 	elseif response.command == Request.COMMAND.SET_BREAKPOINTS then
 		--- @cast response SetBreakpointsResponse
+		Logger.log(response)
 		local set_function_breakpoints_req = Request.SetFunctionBreakpoints:new(Manager.get_next_seq(), {
 			breakpoints = {},
 		})
@@ -196,17 +198,21 @@ function Manager.process_event(event)
 		--- @cast event ExitedEvent
 	elseif event.event == Event.EVENT_TYPE.INITIALIZED then
 		--- @cast event InitializedEvent
-		local set_breakpoints_request = Request.SetBreakpoints:new(Manager.get_next_seq(), {
-			source = {
-				path = "C:\\Users\\juayh\\Dev\\test\\src\\main.cpp",
-			},
-			breakpoints = {
-				{
-					line = 9,
+		--- @type string, SourceBreakpoint[]
+
+		for path, breakpoints in pairs(share.sources) do
+			local breakpoint_sources = {}
+			for breakpoint_line, _ in pairs(breakpoints) do
+				table.insert(breakpoint_sources, { line = breakpoint_line })
+			end
+			local set_breakpoints_request = Request.SetBreakpoints:new(Manager.get_next_seq(), {
+				source = {
+					path = path,
 				},
-			},
-		})
-		Manager.send_request(set_breakpoints_request)
+				breakpoints = breakpoint_sources,
+			})
+			Manager.send_request(set_breakpoints_request)
+		end
 	elseif event.event == Event.EVENT_TYPE.INVALIDATED then
 		--- @cast event InvalidatedEvent
 	elseif event.event == Event.EVENT_TYPE.LOADED_SOURCE then
