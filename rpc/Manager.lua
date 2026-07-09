@@ -5,6 +5,7 @@ local Request = require("dapc.rpc.request")
 local types = require("dapc.rpc.Types")
 local share = require("dapc.share")
 local ui = require("dapc.ui")
+local api = require("dapc.api")
 
 --- @class DAP Manager
 --- @field current_seq number Current JSON-RPC sequence number
@@ -98,6 +99,11 @@ function Manager.process_response(response)
 			stopOnEntry = false,
 		})
 		Manager.send_request(launch_request)
+
+		vim.api.nvim_exec_autocmds("User", {
+			pattern = "DapcInitialized",
+			data = {},
+		})
 	elseif response.command == Request.COMMAND.LAUNCH then
 		--- @cast response LaunchResponse
 	elseif response.command == Request.COMMAND.LOADED_SOURCES then
@@ -122,7 +128,7 @@ function Manager.process_response(response)
 		--- @cast response ScopesResponse
 		local reference
 		for _, scope in ipairs(response.body.scopes) do
-			if scope.presentationHint == "locals" then
+			if scope.presentationHint == types.SCOPE_PRESENTATION_HINT.LOCALS then
 				reference = scope.variablesReference
 				break
 			end
@@ -159,7 +165,6 @@ function Manager.process_response(response)
 		--- @cast response SourceResponse
 		vim.print(response)
 	elseif response.command == Request.COMMAND.STACK_TRACE then
-		Logger.log(response)
 		--- @cast response StackTraceResponse
 		local first_frame = response.body.stackFrames[1]
 		-- https://microsoft.github.io/debug-adapter-protocol/specification#Types_Source
@@ -204,6 +209,8 @@ function Manager.process_response(response)
 		--- @cast response ThreadsResponse
 	elseif response.command == Request.COMMAND.VARIABLES then
 		--- @cast response VariablesResponse
+		Logger.log(response)
+		api.publish.variables(response.body.variables)
 	elseif response.command == Request.COMMAND.WRITE_MEMORY then
 		--- @cast response WriteMemoryResponse
 	end
