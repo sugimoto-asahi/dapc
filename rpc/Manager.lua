@@ -198,7 +198,7 @@ function Manager.process_response(response)
 		})
 		Manager.send_request(scopes_request)
 
-		api.publish.execution_point(first_frame.source.path, first_frame.line, first_frame.column)
+		api.publish.execution_point(first_frame.source.path, first_frame.line)
 	elseif response.command == Request.COMMAND.STEP_BACK then
 		--- @cast response StepBackResponse
 	elseif response.command == Request.COMMAND.STEP_IN then

@@ -81,17 +81,15 @@ end
 --- @class DapcEventExecutionPointData
 --- @field path string Absolute path to file where execution point is in
 --- @field row number Row of execution point
---- @field col number Column of execution point
 
 --- Publish the current execution point the adapter is stopped at
-function api.publish.execution_point(path, row, col)
+function api.publish.execution_point(path, row)
 	vim.api.nvim_exec_autocmds("User", {
 		pattern = "DapcEventExecutionPoint",
 		--- @type DapcEventExecutionPointData
 		data = {
 			path = path,
 			row = row,
-			col = col,
 		},
 	})
 end
