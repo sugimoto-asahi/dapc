@@ -39,6 +39,19 @@ function Manager.init(writer)
 	Manager.writer = writer
 	local init_request = Request.Initialize:new(Manager.get_next_seq(), { adapterID = "lldb-dap" })
 	Manager.send_request(init_request)
+
+	--- Define events that dapc itself subscribes to
+	vim.api.nvim_create_autocmd("User", {
+		pattern = "DapcGetVariable",
+		callback = function(args)
+			local seq = Manager.get_next_seq()
+			local reference = args.data.reference
+			local variables_request = Request.Variables:new(seq, {
+				variablesReference = reference,
+			})
+			Manager.send_request(variables_request)
+		end,
+	})
 end
 
 --- Send a request to stdout
@@ -227,6 +240,7 @@ function Manager.process_event(event)
 		--- @cast event CapabilitiesEvent
 	elseif event.event == Event.EVENT_TYPE.CONTINUED then
 		--- @cast event ContinuedEvent
+		api.publish.end_state()
 	elseif event.event == Event.EVENT_TYPE.EXITED then
 		--- @cast event ExitedEvent
 	elseif event.event == Event.EVENT_TYPE.INITIALIZED then
@@ -309,6 +323,8 @@ function Manager.process_event(event)
 			step_out()
 			vim.keymap.del("n", "<leader>dh")
 		end, {})
+
+		api.publish.start_state()
 
 		if event.body.reason == Event.Stopped.REASON.BREAKPOINT then
 		elseif event.body.reason == Event.Stopped.REASON.STEP then
