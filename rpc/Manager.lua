@@ -198,14 +198,7 @@ function Manager.process_response(response)
 		})
 		Manager.send_request(scopes_request)
 
-		-- vim.print(first_frame.source.sourceReference)
-		-- local source_request = Request.Source:new(Manager.get_next_seq(), {
-		-- 	sourceReference = first_frame.source.sourceReference,
-		-- })
-		-- Manager.send_request(source_request)
-
-		-- update the display for current execution point
-		ui.set_current_point(first_frame.source.path, first_frame.line)
+		api.publish.execution_point(first_frame.source.path, first_frame.line, first_frame.column)
 	elseif response.command == Request.COMMAND.STEP_BACK then
 		--- @cast response StepBackResponse
 	elseif response.command == Request.COMMAND.STEP_IN then
@@ -324,6 +317,7 @@ function Manager.process_event(event)
 			vim.keymap.del("n", "<leader>dh")
 		end, {})
 
+		-- trigger events
 		api.publish.start_state()
 
 		if event.body.reason == Event.Stopped.REASON.BREAKPOINT then
