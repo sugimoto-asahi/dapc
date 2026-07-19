@@ -3,8 +3,7 @@ local Message = require("dapc.rpc.Message")
 local Logger = require("logger")
 local Request = require("dapc.rpc.request")
 local types = require("dapc.rpc.Types")
-local Breakpoints = require("dapc.ui.breakpoint")
-local ui = require("dapc.ui")
+local Breakpoints = require("dapc.Breakpoints")
 local api = require("dapc.api")
 
 --- @class DAP Manager

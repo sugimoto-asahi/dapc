@@ -1,4 +1,4 @@
-local Breakpoints = require("dapc.ui.breakpoint")
+local Breakpoints = require("dapc.Breakpoints")
 
 vim.keymap.set("n", "<leader>db", function()
 	Breakpoints:toggle_breakpoint()

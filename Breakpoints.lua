@@ -1,4 +1,3 @@
-local share = require("dapc.share")
 local api = require("dapc.api")
 
 --- @alias dapc.Breakpoints.Source.Line number Line number of breakpoint
