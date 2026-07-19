@@ -156,6 +156,8 @@ function Manager.process_response(response)
 			breakpoints = {},
 		})
 		Manager.send_request(set_function_breakpoints_req)
+
+		share:update_breakpoints(response.body.breakpoints)
 	elseif response.command == Request.COMMAND.SET_DATA_BREAKPOINTS then
 		--- @cast response SetDataBreakpointsResponse
 	elseif response.command == Request.COMMAND.SET_EXCEPTION_BREAKPOINTS then
@@ -240,16 +242,12 @@ function Manager.process_event(event)
 		--- @cast event InitializedEvent
 		--- @type string, SourceBreakpoint[]
 
-		for path, breakpoints in pairs(share.sources) do
-			local breakpoint_sources = {}
-			for breakpoint_line, _ in pairs(breakpoints) do
-				table.insert(breakpoint_sources, { line = breakpoint_line })
-			end
+		for path, breakpoints in pairs(share:get_breakpoints()) do
 			local set_breakpoints_request = Request.SetBreakpoints:new(Manager.get_next_seq(), {
 				source = {
 					path = path,
 				},
-				breakpoints = breakpoint_sources,
+				breakpoints = breakpoints,
 			})
 			Manager.send_request(set_breakpoints_request)
 		end

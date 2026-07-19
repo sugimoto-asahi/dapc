@@ -94,4 +94,61 @@ function api.publish.execution_point(path, row)
 	})
 end
 
+--- @class DapcEventSetBreakpointData
+--- @field path string Absolute path to file where breakpoint is in
+--- @field row number Row number of breakpoint
+
+--- Publish an attempt to set a breakpoint
+--- Handlers should be aware that while they may display the breakpoint visually at
+--- the specified line (i.e. a red dot in the sign column), the actual set breakpoint
+--- is prone to change and should be updated visually. Changes, if any, are broadcast
+--- with DapcEventUpdateBreakpoint.
+--- @param path string Absolute path to file the breakpoint was set in
+--- @param row number Row number of breakpoint
+function api.publish.set_breakpoint(path, row)
+	vim.api.nvim_exec_autocmds("User", {
+		pattern = "DapcEventSetBreakpoint",
+		--- @type DapcEventSetBreakpointData
+		data = {
+			path = path,
+			row = row,
+		},
+	})
+end
+
+--- @class DapcEventUpdateBreakpointData
+--- @field path string Absolute path to file where breakpoint is in
+--- @field old number Old row number of breakpoint
+--- @field new number New (and authorative) row number of breakpoint
+
+--- Publish an update to a breakpoint
+--- @param path string Absolute path to file the breakpoint was set in
+--- @param old number Old row number of breakpoint
+--- @param new number New (and authorative) row number of breakpoint
+function api.publish.update_breakpoint(path, old, new)
+	vim.api.nvim_exec_autocmds("User", {
+		pattern = "DapcEventUpdateBreakpoint",
+		--- @type DapcEventUpdateBreakpointData
+		data = {
+			path = path,
+			old = old,
+			new = new,
+		},
+	})
+end
+
+--- Publish an unsetting of a breakpoint
+--- @param path string Absolute path to file the breakpoint was set in
+--- @param row number Row number of breakpoint that was unset
+function api.publish.unset_breakpoint(path, row)
+	vim.api.nvim_exec_autocmds("User", {
+		pattern = "DapcEventUnsetBreakpoint",
+		--- @type DapcEventSetBreakpointData
+		data = {
+			path = path,
+			row = row,
+		},
+	})
+end
+
 return api
