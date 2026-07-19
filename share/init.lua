@@ -8,11 +8,13 @@ local M = {}
 --- @type table<string, table<number, boolean>>
 M.sources = {}
 
+-- DEV: DEPRECATE
 --- Add a empty source (no breakpoints) to the sources
 function M:add_source(path)
 	self.sources[path] = {}
 end
 
+-- DEV: DEPRECATE
 --- Retrieve all the set breakpoints
 --- @return table<string, SourceBreakpoint[]>
 function M:get_breakpoints()
@@ -26,6 +28,7 @@ function M:get_breakpoints()
 	return result
 end
 
+-- DEV: DEPRECATE
 --- Update breakpoints with authorative sources
 --- @param breakpoints Breakpoint[] List of all authorative breakpoints
 --- @note The list of authorative breakpoints is ordered in the same way as the arguments
@@ -50,26 +53,28 @@ function M:update_breakpoints(breakpoints)
 	end
 end
 
---- Add a breakpoint to a source
---- @argument path string Path to source
---- @argument line number Line number to add breakpoint at
-function M:add_breakpoint(path, line)
-	if self.sources[path] == nil then
-		--- This source is new, so we need to add it to the sources
-		self:add_source(path)
-	end
-	api.publish.set_breakpoint(path, line)
+-- DEV: DEPRECATE
+-- --- Add a breakpoint to a source
+-- --- @argument path string Path to source
+-- --- @argument line number Line number to add breakpoint at
+-- function M:add_breakpoint(path, line)
+-- 	if self.sources[path] == nil then
+-- 		--- This source is new, so we need to add it to the sources
+-- 		self:add_source(path)
+-- 	end
+-- 	api.publish.set_breakpoint(path, line)
+--
+-- 	self.sources[path][line] = true
+-- end
 
-	self.sources[path][line] = true
-end
-
---- Remove a breakpoint from a source
---- @argument path string Path to source
---- @argument line number Line number of the breakpoint to remove
-function M:remove_breakpoint(path, line)
-	self.sources[path][line] = nil
-
-	api.publish.unset_breakpoint(path, line)
-end
+-- DEV: DEPRECATE
+-- --- Remove a breakpoint from a source
+-- --- @argument path string Path to source
+-- --- @argument line number Line number of the breakpoint to remove
+-- function M:remove_breakpoint(path, line)
+-- 	self.sources[path][line] = nil
+--
+-- 	api.publish.unset_breakpoint(path, line)
+-- end
 
 return M

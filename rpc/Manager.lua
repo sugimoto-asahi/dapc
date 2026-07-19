@@ -3,7 +3,7 @@ local Message = require("dapc.rpc.Message")
 local Logger = require("logger")
 local Request = require("dapc.rpc.request")
 local types = require("dapc.rpc.Types")
-local share = require("dapc.share")
+local Breakpoints = require("dapc.ui.breakpoint")
 local ui = require("dapc.ui")
 local api = require("dapc.api")
 
@@ -157,7 +157,7 @@ function Manager.process_response(response)
 		})
 		Manager.send_request(set_function_breakpoints_req)
 
-		share:update_breakpoints(response.body.breakpoints)
+		Breakpoints:update_breakpoints(response.body.breakpoints)
 	elseif response.command == Request.COMMAND.SET_DATA_BREAKPOINTS then
 		--- @cast response SetDataBreakpointsResponse
 	elseif response.command == Request.COMMAND.SET_EXCEPTION_BREAKPOINTS then
@@ -242,7 +242,7 @@ function Manager.process_event(event)
 		--- @cast event InitializedEvent
 		--- @type string, SourceBreakpoint[]
 
-		for path, breakpoints in pairs(share:get_breakpoints()) do
+		for path, breakpoints in pairs(Breakpoints:get_breakpoints()) do
 			local set_breakpoints_request = Request.SetBreakpoints:new(Manager.get_next_seq(), {
 				source = {
 					path = path,
