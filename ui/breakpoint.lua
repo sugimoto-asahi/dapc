@@ -6,13 +6,6 @@ function M.set_breakpoint()
 	local source_path = vim.api.nvim_buf_get_name(0)
 	local breakpoint_line = vim.api.nvim_win_get_cursor(0)[1]
 
-	-- place the breakpoint sign
-	-- set_extmark is 0-indexed for the line number
-	vim.api.nvim_buf_set_extmark(0, breakpoint_ns, breakpoint_line - 1, 0, {
-		sign_text = "●",
-		sign_hl_group = "DapcBreakpointSign",
-		id = breakpoint_line,
-	})
 	--- @type SourceBreakpoint
 	share:add_breakpoint(source_path, breakpoint_line)
 end

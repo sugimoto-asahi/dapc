@@ -1,3 +1,5 @@
+local api = require("dapc.api")
+
 local M = {}
 
 --- @class dapc.Breakpoint
