@@ -1,7 +1,7 @@
+require("dapc.keymaps")
 local Manager = require("dapc.rpc.Manager")
 
 local Log = require("logger")
-local UI = require("dapc.ui")
 
 local M = {}
 
