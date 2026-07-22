@@ -2,6 +2,7 @@ local Event = require("dapc.rpc.event")
 local Message = require("dapc.rpc.Message")
 local Logger = require("logger")
 local Request = require("dapc.rpc.request")
+local LaunchConfigManager = require("dapc.LaunchConfigManager")
 local types = require("dapc.rpc.Types")
 local Breakpoints = require("dapc.Breakpoints")
 local api = require("dapc.api")
@@ -102,12 +103,20 @@ function Manager.process_response(response)
 	elseif response.command == Request.COMMAND.GOTO_TARGETS then
 		--- @cast response GotoTargetsResponse
 	elseif response.command == Request.COMMAND.INITIALIZE then
+		local config, message = LaunchConfigManager:get()
+		if not config then
+			vim.notify(message, vim.log.levels.ERROR)
+			return
+		else
+			vim.print(config)
+		end
+
 		--- @cast response InitializeResponse
 		local launch_request = Request.Launch:new(Manager.get_next_seq(), {
-			name = "lldb-dap",
-			type = "lldb-dap",
+			name = config.adapter,
+			type = config.adapter,
 			request = "launch",
-			program = "C:\\Users\\juayh\\Dev\\test\\build\\Debug\\test.exe",
+			program = config.program,
 			stopOnEntry = false,
 		})
 		Manager.send_request(launch_request)
