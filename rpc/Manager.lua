@@ -107,8 +107,6 @@ function Manager.process_response(response)
 		if not config then
 			vim.notify(message, vim.log.levels.ERROR)
 			return
-		else
-			vim.print(config)
 		end
 
 		--- @cast response InitializeResponse

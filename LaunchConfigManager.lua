@@ -51,13 +51,9 @@ function LaunchConfigManager:parse(config_path)
 	else
 		-- verify contents
 		local valid = true
-		if not result["adapter"] then
-			valid = false
-		elseif not result["program"] then
-			valid = false
-		elseif not result["args"] then
-			valid = false
-		end
+		valid = result["adapter"] and true
+		valid = result["program"] and true
+		valid = result["args"] and true
 		if valid then
 			self.config = result
 		end
